@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<addon addon_id="termsReagreeAndDiff" title="[kiror] Terms reagree with differences" version_string="0.1" version_id="1" url="https://github.com/adlerosn/" install_callback_class="termsReagreeAndDiff_Model" install_callback_method="install" uninstall_callback_class="termsReagreeAndDiff_Model" uninstall_callback_method="uninstall">
+  <admin_navigation/>
+  <admin_permissions/>
+  <admin_style_properties/>
+  <admin_templates/>
+  <admin_template_modifications/>
+  <code_events/>
+  <code_event_listeners>
+    <listener event_id="load_class_controller" execute_order="10" callback_class="termsReagreeAndDiff_ControllerAdmin_PhraseCallback" callback_method="load_class" active="1" hint="XenForo_ControllerAdmin_Phrase" description="AdminCP - add code after save phrase"/>
+    <listener event_id="load_class_controller" execute_order="10" callback_class="termsReagreeAndDiff_ControllerPublic_RegisterCallback" callback_method="load_class" active="1" hint="XenForo_ControllerPublic_Register" description="Registering - Auto-agree to the Terms when registration accepted"/>
+    <listener event_id="load_class_controller" execute_order="10" callback_class="termsReagreeAndDiff_ControllerPublic_HelpCallback" callback_method="load_class" active="1" hint="XenForo_ControllerPublic_Help" description="Help - Comparing newer and older terms"/>
+    <listener event_id="notices_prepare" execute_order="10" callback_class="termsReagreeAndDiff_NoticesPrepareCallback" callback_method="noticesPrepare" active="1" hint="" description="Notice - Terms changed as Notice"/>
+  </code_event_listeners>
+  <cron/>
+  <email_templates/>
+  <email_template_modifications/>
+  <optiongroups/>
+  <permissions>
+    <permission_groups/>
+    <permissions/>
+    <interface_groups/>
+  </permissions>
+  <phrases>
+    <phrase title="i_agree_with_the_changes" version_id="0" version_string="0.0"><![CDATA[I agree]]></phrase>
+    <phrase title="terms_of_service_and_rules_updated" version_id="0" version_string="0.0"><![CDATA[Terms of Service and Rules updated]]></phrase>
+    <phrase title="view_changes" version_id="0" version_string="0.0"><![CDATA[View changes]]></phrase>
+  </phrases>
+  <route_prefixes/>
+  <style_properties/>
+  <templates>
+    <template title="kiror_help_terms_changes" version_id="0" version_string="0.0"><![CDATA[<xen:title>{xen:phrase terms_of_service_and_rules}</xen:title>
+<xen:require css="kiror_help_terms_changes.css" />
+<xen:navigation>
+	<xen:breadcrumb href="{xen:link help}">{xen:phrase help}</xen:breadcrumb>
+</xen:navigation>
+
+<div class="baseHtml">
+
+<xen:foreach loop="$diffArr" value="$diff">
+	<div class="diff_{$diff.0}">
+	<xen:foreach loop="$diff.1" value="$line">
+		{xen:raw $line}
+	</xen:foreach>
+	</div>
+</xen:foreach>
+<br />
+<div class="pairsColumns" style="max-width: 400px;">
+<dl><dt>Agreed terms:</dt><dd>{$prevFTs}</dd></dl>
+<dl><dt>Current terms:</dt><dd>{$currFTs}</dd></dl>
+<dl><dt>
+<a class="button primary" href="{xen:link 'help/termschanges/','','redirect={$redir}','agree=yes'}">{xen:phrase i_agree_with_the_changes}</a>
+</dt><dd></dd>
+<a class="button" href="{xen:link 'misc/contact'}">{xen:phrase contact_us}</a>
+</dl>
+</div>
+</div>]]></template>
+    <template title="kiror_help_terms_changes.css" version_id="0" version_string="0.0"><![CDATA[.baseHtml .diff_d{
+	background-color: hsla(0, 100%, 50%, 0.2);
+	border: 1px solid hsla(0, 100%, 50%, 1);
+	border-radius: 3px;
+	padding:       2px;
+	padding-top:   -12px;
+	margin:        2px;
+	margin-top:    12px;
+}
+.baseHtml .diff_i{
+	background-color: hsla(120, 100%, 50%, 0.2);
+	border: 1px solid hsla(120, 100%, 50%, 1);
+	border-radius: 3px;
+	padding:       2px;
+	padding-top:   -12px;
+	margin:        2px;
+	margin-top:    12px;
+}
+.baseHtml .diff_e{
+	background-color: hsla(240, 0%, 50%, 0.2);
+	border: 1px solid hsla(240, 0%, 50%, 1);
+	border-radius: 3px;
+	padding:       2px;
+	padding-top:   -12px;
+	margin:        2px;
+	margin-top:    12px;
+}
+.baseHtml .diff_d:before{
+	background-color: {xen:property contentBackground};
+	color: {xen:property contentText};
+	border: 1px solid hsla(0, 100%, 50%, 1);
+	display: block;
+	width: 75px;
+	text-align: center;
+	content: "Removed";
+	border-radius: 3px;
+	padding:       2px;
+	margin:        2px;
+	margin-top:    -12px;
+	margin-bottom: 12px;
+}
+.baseHtml .diff_i:before{
+	background-color: {xen:property contentBackground};
+	color: {xen:property contentText};
+	border: 1px solid hsla(120, 100%, 50%, 1);
+	display: block;
+	width: 75px;
+	text-align: center;
+	content: "Inserted";
+	border-radius: 3px;
+	padding:       2px;
+	margin:        2px;
+	margin-top:    -12px;
+	margin-bottom: 12px;
+}
+.baseHtml .diff_e:before{
+	background-color: {xen:property contentBackground};
+	color: {xen:property contentText};
+	border: 1px solid hsla(240, 0%, 50%, 1);
+	display: block;
+	width: 75px;
+	text-align: center;
+	content: "Untouched";
+	border-radius: 3px;
+	padding:       2px;
+	margin:        2px;
+	margin-top:    -12px;
+	margin-bottom: 12px;
+}]]></template>
+    <template title="kiror_notice_terms_of_service_and_rules_updated" version_id="0" version_string="0.0"><![CDATA[{xen:phrase terms_of_service_and_rules_updated}<br />
+<a href="{xen:link help,termschanges, 'redirect={$requestPaths.requestUri}'}">{xen:phrase view_changes}</a>]]></template>
+  </templates>
+  <public_template_modifications/>
+  <bb_code_media_sites/>
+  <bb_codes/>
+</addon>
