@@ -5,8 +5,9 @@ class termsReagreeAndDiff_ControllerPublic_Help extends XFCP_termsReagreeAndDiff
 		$options = XenForo_Application::get('options');
 		$visitor = XenForo_Visitor::getInstance();
 		$uid = $visitor['user_id'];
+		if(!$uid) return parent::actionTerms();
 		$dismissable = termsReagreeAndDiff_Model::checkAgreementDismissable($uid);
-		if($dismissable[0]) parent::actionTerms();
+		if($dismissable[0]) return parent::actionTerms();
 		if (!$options->tosUrl['type'])
 		{
 			termsReagreeAndDiff_Model::agreeWithLatestTerms($uid);

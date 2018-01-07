@@ -75,7 +75,7 @@ class termsReagreeAndDiff_Model{
 		if(self::hasEntry($uid)) return;
 		$uid = intval($uid);
 		$dbc=XenForo_Application::get('db');
-		$q='INSERT INTO `kiror_tos_reagree_users` (uid,uts,tid) VALUES ('.$uid.',NOW(),1);';
+		$q='INSERT INTO `kiror_tos_reagree_users` (uid,uts,tid) VALUES ('.$uid.',NOW(),(SELECT MAX(`tid`) AS `latest` FROM `kiror_tos_reagree_history`));';
 		$dbc->query($q);
 	}
 	public static function checkAgreementDismissable($uid){
